@@ -1,17 +1,31 @@
 package com.hausberger.mysuperapp
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
+import com.hausberger.mysuperapp.databinding.ActivityMainBinding
+import com.hausberger.mysuperapp.framework.presentation.contentprovider.PlacesActivity
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.contentProviderButton.apply {
+            setOnClickListener {
+                val intent = Intent(this@MainActivity, PlacesActivity::class.java)
+                startActivity(intent)
+            }
+        }
 
         useContentProvider()
     }
