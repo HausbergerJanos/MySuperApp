@@ -23,7 +23,9 @@
 
         <activity android:name=".framework.presentation.contentprovider.PlacesActivity" />
 
-        <activity android:name=".framework.presentation.contentprovider.AddNewPlacesActivity" />
+        <activity
+            android:name=".framework.presentation.contentprovider.AddNewPlacesActivity"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

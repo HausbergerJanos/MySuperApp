@@ -2,4 +2,7 @@
     <string name="app_name">MySuperApp</string>
     <string name="sample_content_provider">Content Provider</string>
     <string name="add_new_place_title">Add new place</string>
+    <string name="save">Save</string>
+    <string name="add_town_hint">Add Town...</string>
+    <string name="add_country_hint">Add Country...</string>
 </resources>
