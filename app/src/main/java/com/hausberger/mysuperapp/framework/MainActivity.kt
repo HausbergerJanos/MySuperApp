@@ -1,4 +1,4 @@
-package com.hausberger.mysuperapp
+package com.hausberger.mysuperapp.framework
 
 import android.Manifest
 import android.content.Intent
