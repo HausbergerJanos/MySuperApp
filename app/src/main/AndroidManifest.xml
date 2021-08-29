@@ -26,6 +26,12 @@
         <activity
             android:name=".framework.presentation.contentprovider.AddNewPlacesActivity"
             android:windowSoftInputMode="adjustResize"/>
+
+        <provider
+            android:name=".framework.datasource.provider.PlaceContentProvider"
+            android:authorities="com.hausberger.mysuperapp.provider"
+            android:exported="true"
+            android:permission="com.example.android.contentprovidersample.provider.READ_WRITE"/>
     </application>
 
 </manifest>
