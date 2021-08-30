@@ -1,20 +1,16 @@
 package com.hausberger.mysuperapp.framework.datasource.provider
 
 import android.content.ContentProvider
-import android.content.ContentUris
 import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  *  A [ContentProvider] based on a Room database.
@@ -62,11 +58,26 @@ class PlaceContentProvider : ContentProvider() {
         val hiltEntryPoint =
             EntryPointAccessors.fromApplication(appContext, PlaceContentProviderEntryPoint::class.java)
 
+        var localSortOrder: String = sortOrder ?: ""
+
         val code = uriMatcher.match(uri)
         if (code == PlaceContract.CODE_PLACES_DIR || code == PlaceContract.CODE_PLACES_ITEM) {
+            val cursor: Cursor? = if (code == PlaceContract.CODE_PLACES_DIR) {
+                if (localSortOrder.isEmpty()) {
+                    localSortOrder = "${PlaceContract.COLUMN_ID} ASC"
+                }
 
-            var cursor: Cursor? = if (code == PlaceContract.CODE_PLACES_DIR) {
-                hiltEntryPoint.placeDao().selectAll()
+                var localQuery = "SELECT * FROM ${PlaceContract.TABLE_NAME}"
+
+                if (!selection.isNullOrEmpty()) {
+                    localQuery += " WHERE"
+                    localQuery += " $selection"
+                }
+
+                localQuery += " ORDER BY $localSortOrder"
+
+                val query = SimpleSQLiteQuery(localQuery, selectionArgs)
+                hiltEntryPoint.placeDao().select(query)
             } else {
                 hiltEntryPoint.placeDao().selectById(uri.lastPathSegment ?: "")
             }

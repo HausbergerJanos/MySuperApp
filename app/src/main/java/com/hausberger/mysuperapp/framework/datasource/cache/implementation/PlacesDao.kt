@@ -1,11 +1,10 @@
 package com.hausberger.mysuperapp.framework.datasource.cache.implementation
 
 import android.database.Cursor
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
+
 
 @Dao
 interface PlacesDao {
@@ -21,8 +20,11 @@ interface PlacesDao {
      *
      * @return A [Cursor] of all the places in the table.
      */
-    @Query("SELECT * FROM places")
-    fun selectAll(): Cursor?
+    @Query("SELECT * FROM places ORDER BY :sortOrder")
+    fun selectAll(sortOrder: String): Cursor?
+
+    @RawQuery
+    fun select(query: SupportSQLiteQuery?): Cursor?
 
     /**
      * Select a place by the ID.

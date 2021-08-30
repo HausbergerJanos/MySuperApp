@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 // A "projection" defines the columns that will be returned for each row
                 val projection: Array<String> = arrayOf(
                     PlaceContract.COLUMN_ID,              // Contract class constant for the _ID column name
-                    PlaceContract.COLUMN_COUNTRY      // Contract class constant for the contact column name
+                    PlaceContract.COLUMN_COUNTRY          // Contract class constant for the contact column name
                 )
 
                 // Defines a string to contain the selection clause
@@ -50,13 +50,13 @@ class MainActivity : AppCompatActivity() {
                 lateinit var selectionArgs: Array<String>
 
                 // Gets a word from the UI
-                val searchString: String? = "Debrecen"
+                val searchString: String? = "Hungary"
 
                 // Remember to insert code here to check for invalid or malicious input.
 
                 // If the word is the empty string, gets everything
                 selectionArgs = searchString?.takeIf { it.isNotEmpty() }?.let {
-                    selectionClause = "${PlaceContract.COLUMN_ID} = ?"
+                    selectionClause = "${PlaceContract.COLUMN_COUNTRY} = ?"
                     arrayOf(it)
                 } ?: run {
                     selectionClause = null
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                 // SELECT _ID, display_name FROM contacts WHERE display_name = <userinput>;
                 return CursorLoader(
                     applicationContext,
-                    PlaceContract.URI_PLACE_TEST,        // The content URI of the words table
+                    PlaceContract.URI_PLACE,        // The content URI of the words table
                     projection,                     // The columns to return for each row
                     selectionClause,                // Either null, or the word the user entered
                     selectionArgs,                  // Either empty, or the string the user entered
