@@ -7,8 +7,9 @@ interface PlaceContract {
 
     companion object {
         const val COLUMN_ID = BaseColumns._ID
+        const val COLUMN_TOWN = "town"
         const val COLUMN_COUNTRY = "country"
-        public const val TABLE_NAME = "places"
+        const val TABLE_NAME = "places"
 
         /** The authority of this content provider. */
         val AUTHORITY = "com.hausberger.mysuperapp.provider"
@@ -20,7 +21,7 @@ interface PlaceContract {
 		
 		/** The URI for the Places table. */
         val URI_PLACE_TEST = Uri.parse(
-            "content://$AUTHORITY/${PlaceContract.TABLE_NAME}/Debrecen"
+            "content://$AUTHORITY/${PlaceContract.TABLE_NAME}/1"
         )
 
         /** The match code for some items in the Places table.  */

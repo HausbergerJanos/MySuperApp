@@ -8,8 +8,11 @@ import com.hausberger.mysuperapp.framework.datasource.provider.PlaceContract
 @Entity(tableName = PlaceContract.TABLE_NAME)
 data class PlaceEntity(
 
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = PlaceContract.COLUMN_ID, index = true)
+    val id: Int = 0,
+
+    @ColumnInfo(name = PlaceContract.COLUMN_TOWN)
     val town: String,
 
     @ColumnInfo(name = PlaceContract.COLUMN_COUNTRY)

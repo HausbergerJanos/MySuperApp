@@ -40,7 +40,8 @@ class MainActivity : AppCompatActivity() {
                 // A "projection" defines the columns that will be returned for each row
                 val projection: Array<String> = arrayOf(
                     PlaceContract.COLUMN_ID,              // Contract class constant for the _ID column name
-                    PlaceContract.COLUMN_COUNTRY          // Contract class constant for the contact column name
+                    PlaceContract.COLUMN_TOWN,            // Contract class constant for the town column name
+                    PlaceContract.COLUMN_COUNTRY          // Contract class constant for the country column name
                 )
 
                 // Defines a string to contain the selection clause
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
                 data?.apply {
                     // Determine the column index of the column named "display_name"
-                    val index: Int = getColumnIndex(PlaceContract.COLUMN_ID)
+                    val index: Int = getColumnIndex(PlaceContract.COLUMN_TOWN)
 
                     /*
                     * Moves to the next row in the cursor. Before the first movement in the cursor, the
