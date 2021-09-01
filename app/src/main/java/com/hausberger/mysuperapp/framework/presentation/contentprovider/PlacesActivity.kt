@@ -2,20 +2,15 @@ package com.hausberger.mysuperapp.framework.presentation.contentprovider
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hausberger.mysuperapp.databinding.ActivityPlacesBinding
-import com.hausberger.mysuperapp.framework.datasource.cache.database.Database
 import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -67,7 +62,6 @@ class PlacesActivity : AppCompatActivity() {
             }
 
             withContext(Main) {
-
                 displayPlaces(places)
             }
         }

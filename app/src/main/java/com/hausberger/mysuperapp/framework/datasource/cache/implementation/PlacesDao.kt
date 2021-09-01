@@ -12,6 +12,9 @@ interface PlacesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(place: PlaceEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPlace(place: PlaceEntity): Long
+
     @Query("SELECT * FROM places")
     suspend fun getPlaces(): List<PlaceEntity>
 

@@ -1,16 +1,20 @@
 package com.hausberger.mysuperapp.framework.datasource.provider
 
 import android.content.ContentProvider
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
+import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  *  A [ContentProvider] based on a Room database.
@@ -98,8 +102,22 @@ class PlaceContentProvider : ContentProvider() {
         }
     }
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri? {
-        TODO("Not yet implemented")
+    override fun insert(uri: Uri, values: ContentValues?): Uri {
+        when (uriMatcher.match(uri)) {
+            PlaceContract.CODE_PLACES_DIR -> {
+                val appContext = context?.applicationContext ?: throw IllegalStateException()
+                val hiltEntryPoint =
+                    EntryPointAccessors.fromApplication(appContext, PlaceContentProviderEntryPoint::class.java)
+
+                val id = hiltEntryPoint.placeDao().insertPlace(PlaceEntity.fromContentValues(values))
+                appContext.contentResolver.notifyChange(uri, null)
+                return ContentUris.withAppendedId(uri, id)
+            }
+
+            PlaceContract.CODE_PLACES_ITEM -> throw IllegalArgumentException("Invalid URI, cannot insert with ID: $uri")
+
+            else -> throw IllegalArgumentException("Unknown URI: $uri");
+        }
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {

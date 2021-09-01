@@ -1,17 +1,26 @@
 package com.hausberger.mysuperapp.framework
 
+import android.annotation.SuppressLint
+import android.content.AsyncQueryHandler
+import android.content.ContentValues
 import android.content.Intent
 import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
-import android.provider.ContactsContract
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import com.hausberger.mysuperapp.databinding.ActivityMainBinding
+import com.hausberger.mysuperapp.framework.datasource.provider.MyQueryHandler
 import com.hausberger.mysuperapp.framework.datasource.provider.PlaceContract
 import com.hausberger.mysuperapp.framework.presentation.contentprovider.PlacesActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +39,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        LoaderManager.getInstance(this).initLoader(5, null, loaderCallbacks)
+        //LoaderManager.getInstance(this).initLoader(5, null, loaderCallbacks)
+        //insertToDb()
     }
 
     private val loaderCallbacks: LoaderManager.LoaderCallbacks<Cursor?> =
@@ -88,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                     * exception.
                     */
                     while (moveToNext()) {
-                        val contactName = getString(index)
+                        val townName = getString(index)
                         Log.d("TAG", "useContentProvider: ")
                     }
                 }
@@ -124,4 +134,18 @@ class MainActivity : AppCompatActivity() {
                 //mCheeseAdapter.setCheeses(null)
             }
         }
+
+    private fun insertToDb() {
+        // Defines an object to contain the new values to insert
+        val newValues = ContentValues()
+
+        /**
+         * Sets the values of each column and inserts the word. The arguments to the "put"
+         * method are "column name" and "value"
+         */
+        newValues.put(PlaceContract.COLUMN_TOWN, "Eger")
+        newValues.put(PlaceContract.COLUMN_COUNTRY, "Hungary")
+
+        MyQueryHandler(this).startInsert(-1, null, PlaceContract.URI_PLACE, newValues)
+    }
 }
