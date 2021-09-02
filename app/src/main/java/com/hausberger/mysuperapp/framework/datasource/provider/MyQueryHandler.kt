@@ -9,4 +9,8 @@ class MyQueryHandler(activity: Activity) : AsyncQueryHandler(activity.contentRes
     override fun onInsertComplete(token: Int, cookie: Any?, uri: Uri?) {
         super.onInsertComplete(token, cookie, uri)
     }
+
+    override fun onDeleteComplete(token: Int, cookie: Any?, result: Int) {
+        super.onDeleteComplete(token, cookie, result)
+    }
 }

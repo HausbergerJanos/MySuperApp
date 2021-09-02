@@ -6,15 +6,17 @@ import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
+import android.os.Handler
+import android.util.Log
+import androidx.room.withTransaction
 import androidx.sqlite.db.SimpleSQLiteQuery
+import com.hausberger.mysuperapp.framework.datasource.cache.database.Database
 import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  *  A [ContentProvider] based on a Room database.
@@ -81,13 +83,12 @@ class PlaceContentProvider : ContentProvider() {
                 localQuery += " ORDER BY $localSortOrder"
 
                 val query = SimpleSQLiteQuery(localQuery, selectionArgs)
-                hiltEntryPoint.placeDao().select(query)
+                hiltEntryPoint.placeDao().rawOperation(query)
             } else {
                 hiltEntryPoint.placeDao().selectById(uri.lastPathSegment ?: "")
             }
 
             cursor?.setNotificationUri(context?.contentResolver, uri)
-
             return cursor
         } else {
             throw IllegalArgumentException("Unknown URI: $uri");
@@ -121,7 +122,46 @@ class PlaceContentProvider : ContentProvider() {
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
-        TODO("Not yet implemented")
+        val appContext = context?.applicationContext ?: throw IllegalStateException()
+        val hiltEntryPoint =
+            EntryPointAccessors.fromApplication(appContext, PlaceContentProviderEntryPoint::class.java)
+
+        return when (uriMatcher.match(uri)) {
+            PlaceContract.CODE_PLACES_DIR -> {
+                var localQuery = "DELETE FROM ${PlaceContract.TABLE_NAME}"
+
+                selection?.takeIf { it.isNotEmpty() }?.let {
+                    localQuery += " WHERE"
+                    localQuery += " $it"
+                } ?: throw IllegalArgumentException("Can not delete without selection!")
+
+                var startCount = 0
+                var endCount = 0
+                var cursor: Cursor?
+
+                hiltEntryPoint.db().runInTransaction {
+                    startCount = hiltEntryPoint.placeDao().count()
+
+                    val query = SimpleSQLiteQuery(localQuery, selectionArgs)
+                    cursor = hiltEntryPoint.placeDao().rawOperation(query)
+                    appContext.contentResolver.notifyChange(uri, null)
+                    // Not working count without it :/
+                    cursor?.count
+
+                    endCount = hiltEntryPoint.placeDao().count()
+                }
+
+                startCount - endCount
+            }
+
+            PlaceContract.CODE_PLACES_ITEM -> {
+                val count = hiltEntryPoint.placeDao().deleteById(ContentUris.parseId(uri).toInt())
+                appContext.contentResolver.notifyChange(uri, null)
+                count
+            }
+
+            else -> throw IllegalArgumentException("Unknown URI: $uri");
+        }
     }
 
     override fun update(
@@ -137,5 +177,6 @@ class PlaceContentProvider : ContentProvider() {
     @InstallIn(SingletonComponent::class)
     interface PlaceContentProviderEntryPoint {
         fun placeDao(): PlacesDao
+        fun db(): Database
     }
 }

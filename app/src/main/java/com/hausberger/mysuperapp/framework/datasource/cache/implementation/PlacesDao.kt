@@ -27,7 +27,7 @@ interface PlacesDao {
     fun selectAll(sortOrder: String): Cursor?
 
     @RawQuery
-    fun select(query: SupportSQLiteQuery?): Cursor?
+    fun rawOperation(query: SupportSQLiteQuery?): Cursor?
 
     /**
      * Select a place by the ID.
@@ -37,4 +37,21 @@ interface PlacesDao {
      */
     @Query("SELECT * FROM places WHERE _id = :id")
     fun selectById(id: String): Cursor?
+
+    /**
+     * Delete a place by the ID.
+     *
+     * @param id The row ID.
+     * @return A number of places deleted. This should always be `1`.
+     */
+    @Query("DELETE FROM places WHERE _id = :id")
+    fun deleteById(id: Int): Int
+
+    /**
+     * Counts the number of places in the table.
+     *
+     * @return The number of places.
+     */
+    @Query("SELECT COUNT(*) FROM places")
+    fun count(): Int
 }
