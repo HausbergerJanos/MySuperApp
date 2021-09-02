@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         //LoaderManager.getInstance(this).initLoader(5, null, loaderCallbacks)
         //insertToDb()
+        //deleteFromDb()
     }
 
     private val loaderCallbacks: LoaderManager.LoaderCallbacks<Cursor?> =
@@ -147,5 +148,32 @@ class MainActivity : AppCompatActivity() {
         newValues.put(PlaceContract.COLUMN_COUNTRY, "Hungary")
 
         MyQueryHandler(this).startInsert(-1, null, PlaceContract.URI_PLACE, newValues)
+    }
+
+    private fun deleteFromDb() {
+        // Defines a string to contain the selection clause
+        var selectionClause: String? = null
+
+        // Declares an array to contain selection arguments
+        lateinit var selectionArgs: Array<String>
+
+        // Gets a word from the UI
+        val searchString: String? = null
+
+        // If the word is the empty string, gets everything
+        selectionArgs = searchString?.takeIf { it.isNotEmpty() }?.let {
+            selectionClause = "${PlaceContract.COLUMN_COUNTRY} = ?"
+            arrayOf(it)
+        } ?: run {
+            selectionClause = null
+            emptyArray()
+        }
+
+        MyQueryHandler(this).startDelete(
+            -1,
+            null,
+            PlaceContract.URI_PLACE,
+            selectionClause,
+            selectionArgs)
     }
 }
