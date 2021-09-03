@@ -39,9 +39,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //LoaderManager.getInstance(this).initLoader(5, null, loaderCallbacks)
+        LoaderManager.getInstance(this).initLoader(5, null, loaderCallbacks)
         //insertToDb()
-        deleteFromDb()
+        //deleteFromDb()
         //updatePlace()
     }
 

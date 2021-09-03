@@ -210,6 +210,5 @@ class PlaceContentProvider : ContentProvider() {
     @InstallIn(SingletonComponent::class)
     interface PlaceContentProviderEntryPoint {
         fun placeDao(): PlacesDao
-        fun db(): Database
     }
 }
