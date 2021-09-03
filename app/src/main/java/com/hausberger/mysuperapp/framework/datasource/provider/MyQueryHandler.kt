@@ -13,4 +13,8 @@ class MyQueryHandler(activity: Activity) : AsyncQueryHandler(activity.contentRes
     override fun onDeleteComplete(token: Int, cookie: Any?, result: Int) {
         super.onDeleteComplete(token, cookie, result)
     }
+
+    override fun onUpdateComplete(token: Int, cookie: Any?, result: Int) {
+        super.onUpdateComplete(token, cookie, result)
+    }
 }

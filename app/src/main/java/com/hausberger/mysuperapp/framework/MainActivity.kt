@@ -41,7 +41,8 @@ class MainActivity : AppCompatActivity() {
 
         //LoaderManager.getInstance(this).initLoader(5, null, loaderCallbacks)
         //insertToDb()
-        //deleteFromDb()
+        deleteFromDb()
+        //updatePlace()
     }
 
     private val loaderCallbacks: LoaderManager.LoaderCallbacks<Cursor?> =
@@ -158,7 +159,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var selectionArgs: Array<String>
 
         // Gets a word from the UI
-        val searchString: String? = null
+        val searchString: String? = "Hungary"
 
         // If the word is the empty string, gets everything
         selectionArgs = searchString?.takeIf { it.isNotEmpty() }?.let {
@@ -175,5 +176,54 @@ class MainActivity : AppCompatActivity() {
             PlaceContract.URI_PLACE,
             selectionClause,
             selectionArgs)
+    }
+
+    private fun updatePlace() {
+        /**
+         * Update by id. In this case use [URI_PLACE_TEST] uri. SelectionClause and selectionArgs
+         * will be ignored
+         */
+        // Defines an object to contain the new values to insert
+        val newValues = ContentValues()
+
+        /**
+         * Sets the values of each column and inserts the word. The arguments to the "put"
+         * method are "column name" and "value"
+         */
+        newValues.put(PlaceContract.COLUMN_TOWN, "Tunyog")
+        newValues.put(PlaceContract.COLUMN_COUNTRY, "Anglia")
+
+        /** ------------------------------------------------------------------------------------ */
+        /**
+         * Update by selection. In this case use [URI_PLACE] uri. [newValues] will be ignored.
+         * Important!!! If you update places on this way, updated rows counter will be always 0.
+         * We can not notify about how many rows updated.
+         */
+        // Defines a string to contain the selection clause
+        var selectionClause: String? = null
+
+        // Declares an array to contain selection arguments
+        lateinit var selectionArgs: Array<String>
+
+        // Gets a word from the UI
+        val searchString: String? = "Anglia"
+
+        // If the word is the empty string, gets everything
+        selectionArgs = searchString?.takeIf { it.isNotEmpty() }?.let {
+            selectionClause = " SET ${PlaceContract.COLUMN_TOWN} = ?, ${PlaceContract.COLUMN_COUNTRY} = ? WHERE ${PlaceContract.COLUMN_COUNTRY} = ?"
+            arrayOf("Roxfort", "Hungary", it)
+        } ?: run {
+            selectionClause = null
+            emptyArray()
+        }
+
+        MyQueryHandler(this).startUpdate(
+            -1,
+            null,
+            PlaceContract.URI_PLACE,
+            newValues,
+            selectionClause,
+            selectionArgs
+        )
     }
 }

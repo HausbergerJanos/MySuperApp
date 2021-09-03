@@ -12,7 +12,7 @@ data class PlaceEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = PlaceContract.COLUMN_ID, index = true)
-    val id: Int = 0,
+    var id: Int = 0,
 
     @ColumnInfo(name = PlaceContract.COLUMN_TOWN)
     val town: String,

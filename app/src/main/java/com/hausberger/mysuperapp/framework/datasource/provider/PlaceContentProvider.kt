@@ -62,7 +62,10 @@ class PlaceContentProvider : ContentProvider() {
     ): Cursor? {
         val appContext = context?.applicationContext ?: throw IllegalStateException()
         val hiltEntryPoint =
-            EntryPointAccessors.fromApplication(appContext, PlaceContentProviderEntryPoint::class.java)
+            EntryPointAccessors.fromApplication(
+                appContext,
+                PlaceContentProviderEntryPoint::class.java
+            )
 
         var localSortOrder: String = sortOrder ?: ""
 
@@ -108,9 +111,13 @@ class PlaceContentProvider : ContentProvider() {
             PlaceContract.CODE_PLACES_DIR -> {
                 val appContext = context?.applicationContext ?: throw IllegalStateException()
                 val hiltEntryPoint =
-                    EntryPointAccessors.fromApplication(appContext, PlaceContentProviderEntryPoint::class.java)
+                    EntryPointAccessors.fromApplication(
+                        appContext,
+                        PlaceContentProviderEntryPoint::class.java
+                    )
 
-                val id = hiltEntryPoint.placeDao().insertPlace(PlaceEntity.fromContentValues(values))
+                val id =
+                    hiltEntryPoint.placeDao().insertPlace(PlaceEntity.fromContentValues(values))
                 appContext.contentResolver.notifyChange(uri, null)
                 return ContentUris.withAppendedId(uri, id)
             }
@@ -124,10 +131,15 @@ class PlaceContentProvider : ContentProvider() {
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
         val appContext = context?.applicationContext ?: throw IllegalStateException()
         val hiltEntryPoint =
-            EntryPointAccessors.fromApplication(appContext, PlaceContentProviderEntryPoint::class.java)
+            EntryPointAccessors.fromApplication(
+                appContext,
+                PlaceContentProviderEntryPoint::class.java
+            )
 
         return when (uriMatcher.match(uri)) {
             PlaceContract.CODE_PLACES_DIR -> {
+                // Deleted rows counter will be always 0! Consider disable this way to update!
+                // throw IllegalArgumentException("Invalid URI, cannot update without ID$uri")
                 var localQuery = "DELETE FROM ${PlaceContract.TABLE_NAME}"
 
                 selection?.takeIf { it.isNotEmpty() }?.let {
@@ -135,23 +147,11 @@ class PlaceContentProvider : ContentProvider() {
                     localQuery += " $it"
                 } ?: throw IllegalArgumentException("Can not delete without selection!")
 
-                var startCount = 0
-                var endCount = 0
-                var cursor: Cursor?
+                val query = SimpleSQLiteQuery(localQuery, selectionArgs)
+                val cursor = hiltEntryPoint.placeDao().rawOperation(query)
+                appContext.contentResolver.notifyChange(uri, null)
 
-                hiltEntryPoint.db().runInTransaction {
-                    startCount = hiltEntryPoint.placeDao().count()
-
-                    val query = SimpleSQLiteQuery(localQuery, selectionArgs)
-                    cursor = hiltEntryPoint.placeDao().rawOperation(query)
-                    appContext.contentResolver.notifyChange(uri, null)
-                    // Not working count without it :/
-                    cursor?.count
-
-                    endCount = hiltEntryPoint.placeDao().count()
-                }
-
-                startCount - endCount
+                cursor?.count ?: 0
             }
 
             PlaceContract.CODE_PLACES_ITEM -> {
@@ -160,7 +160,7 @@ class PlaceContentProvider : ContentProvider() {
                 count
             }
 
-            else -> throw IllegalArgumentException("Unknown URI: $uri");
+            else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
     }
 
@@ -170,7 +170,40 @@ class PlaceContentProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<out String>?
     ): Int {
-        TODO("Not yet implemented")
+        val appContext = context?.applicationContext ?: throw IllegalStateException()
+        val hiltEntryPoint =
+            EntryPointAccessors.fromApplication(
+                appContext,
+                PlaceContentProviderEntryPoint::class.java
+            )
+
+        return when (uriMatcher.match(uri)) {
+            PlaceContract.CODE_PLACES_DIR -> {
+                // Updated rows counter will be always 0! Consider disable this way to update!
+                // throw IllegalArgumentException("Invalid URI, cannot update without ID$uri")
+                var localQuery = "UPDATE ${PlaceContract.TABLE_NAME}"
+
+                selection?.takeIf { it.isNotEmpty() }?.let {
+                    localQuery += it
+                } ?: throw IllegalArgumentException("Can not delete without selection!")
+
+                val query = SimpleSQLiteQuery(localQuery, selectionArgs)
+                val cursor = hiltEntryPoint.placeDao().rawOperation(query)
+                appContext.contentResolver.notifyChange(uri, null)
+
+                cursor?.count ?: 0
+            }
+
+            PlaceContract.CODE_PLACES_ITEM -> {
+                val place = PlaceEntity.fromContentValues(values)
+                place.id = ContentUris.parseId(uri).toInt()
+                val count = hiltEntryPoint.placeDao().update(place)
+                appContext.contentResolver.notifyChange(uri, null)
+                count
+            }
+
+            else -> throw IllegalArgumentException("Unknown URI: $uri")
+        }
     }
 
     @EntryPoint

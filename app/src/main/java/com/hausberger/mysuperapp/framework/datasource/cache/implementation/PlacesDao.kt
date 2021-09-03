@@ -54,4 +54,13 @@ interface PlacesDao {
      */
     @Query("SELECT COUNT(*) FROM places")
     fun count(): Int
+
+    /**
+     * Update the place. The place is identified by the row ID.
+     *
+     * @param place The place to update.
+     * @return A number of places updated. This should always be `1`.
+     */
+    @Update
+    fun update(place: PlaceEntity?): Int
 }
