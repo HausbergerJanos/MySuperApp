@@ -1,11 +1,8 @@
 package com.hausberger.mysuperapp.framework
 
-import android.annotation.SuppressLint
-import android.content.AsyncQueryHandler
 import android.content.ContentValues
 import android.content.Intent
 import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,12 +12,9 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import com.hausberger.mysuperapp.databinding.ActivityMainBinding
-import com.hausberger.mysuperapp.framework.datasource.provider.MyQueryHandler
-import com.hausberger.mysuperapp.framework.datasource.provider.PlaceContract
+import com.hausberger.mysuperapp.framework.datasource.provider.contentprovider.MyQueryHandler
+import com.hausberger.mysuperapp.framework.datasource.provider.contentprovider.PlaceContract
 import com.hausberger.mysuperapp.framework.presentation.contentprovider.PlacesActivity
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {

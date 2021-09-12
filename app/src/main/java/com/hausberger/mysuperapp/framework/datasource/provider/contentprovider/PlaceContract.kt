@@ -1,4 +1,4 @@
-package com.hausberger.mysuperapp.framework.datasource.provider
+package com.hausberger.mysuperapp.framework.datasource.provider.contentprovider
 
 import android.net.Uri
 import android.provider.BaseColumns
@@ -16,12 +16,12 @@ interface PlaceContract {
 
         /** The URI for the Places table. */
         val URI_PLACE = Uri.parse(
-            "content://$AUTHORITY/${PlaceContract.TABLE_NAME}"
+            "content://$AUTHORITY/$TABLE_NAME"
         )
 		
 		/** The URI for the Places table. */
         val URI_PLACE_TEST = Uri.parse(
-            "content://$AUTHORITY/${PlaceContract.TABLE_NAME}/1"
+            "content://$AUTHORITY/$TABLE_NAME/1"
         )
 
         /** The match code for some items in the Places table.  */

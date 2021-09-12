@@ -1,4 +1,4 @@
-package com.hausberger.mysuperapp.framework.datasource.provider
+package com.hausberger.mysuperapp.framework.datasource.provider.contentprovider
 
 import android.content.ContentProvider
 import android.content.ContentUris
@@ -6,11 +6,7 @@ import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
-import android.os.Handler
-import android.util.Log
-import androidx.room.withTransaction
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.hausberger.mysuperapp.framework.datasource.cache.database.Database
 import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import dagger.hilt.EntryPoint

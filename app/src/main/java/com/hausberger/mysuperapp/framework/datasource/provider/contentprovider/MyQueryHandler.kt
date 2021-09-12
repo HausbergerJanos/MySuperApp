@@ -1,4 +1,4 @@
-package com.hausberger.mysuperapp.framework.datasource.provider
+package com.hausberger.mysuperapp.framework.datasource.provider.contentprovider
 
 import android.app.Activity
 import android.content.AsyncQueryHandler

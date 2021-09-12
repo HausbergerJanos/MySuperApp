@@ -4,7 +4,7 @@ import android.content.ContentValues
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.hausberger.mysuperapp.framework.datasource.provider.PlaceContract
+import com.hausberger.mysuperapp.framework.datasource.provider.contentprovider.PlaceContract
 
 
 @Entity(tableName = PlaceContract.TABLE_NAME)
