@@ -4,8 +4,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.loader.app.LoaderManager
@@ -15,6 +13,7 @@ import com.hausberger.mysuperapp.databinding.ActivityMainBinding
 import com.hausberger.mysuperapp.framework.datasource.provider.contentprovider.MyQueryHandler
 import com.hausberger.mysuperapp.framework.datasource.provider.contentprovider.PlaceContract
 import com.hausberger.mysuperapp.framework.presentation.contentprovider.PlacesActivity
+import com.hausberger.mysuperapp.framework.savedata.ui.SaveDataActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,7 +32,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        LoaderManager.getInstance(this).initLoader(5, null, loaderCallbacks)
+        binding.saveDataButton.apply {
+            setOnClickListener {
+                startActivity(Intent(this@MainActivity, SaveDataActivity::class.java))
+            }
+        }
+
+        //LoaderManager.getInstance(this).initLoader(5, null, loaderCallbacks)
         //insertToDb()
         //deleteFromDb()
         //updatePlace()

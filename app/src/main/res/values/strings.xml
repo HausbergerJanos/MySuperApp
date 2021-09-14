@@ -7,4 +7,5 @@
     <string name="add_country_hint">Add Country...</string>
 
     <string name="root_summary">here are your files</string>
+    <string name="save_data_button">Save data</string>
 </resources>
