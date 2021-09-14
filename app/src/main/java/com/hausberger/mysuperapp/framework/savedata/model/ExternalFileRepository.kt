@@ -33,26 +33,36 @@ package com.hausberger.mysuperapp.framework.savedata.model
 import android.content.Context
 import android.os.Environment
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 
 class ExternalFileRepository(var context: Context) :
     NoteRepository {
 
     override fun addNote(note: Note) {
-        // TODO remove the following line of code
-        //  and add code from the tutorial here instead.
+        if (isExternalStorageWritable()) {
+            FileOutputStream(noteFile(note.fileName)).use { output ->
+                output.write(note.noteText.toByteArray())
+            }
+        }
     }
 
     override fun getNote(fileName: String): Note {
-        // TODO remove the following return statement
-        //  and add code from the tutorial here instead.
-        return Note("", "")
+        val note = Note(fileName, "")
+        if (isExternalStorageWritable()) {
+            FileInputStream(noteFile(fileName)).use { stream ->
+                val text = stream.bufferedReader().use {
+                    it.readText()
+                }
+                note.noteText = text
+            }
+        }
+        return note
     }
 
     override fun deleteNote(fileName: String): Boolean {
-        // TODO remove the following return statement
-        //  and add code from the tutorial here instead.
-        return true
+        return isExternalStorageWritable() && noteFile(fileName).delete()
     }
 
     private fun noteDirectory(): File? = context.getExternalFilesDir(null)

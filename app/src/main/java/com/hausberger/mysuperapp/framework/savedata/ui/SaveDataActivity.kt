@@ -3,6 +3,7 @@ package com.hausberger.mysuperapp.framework.savedata.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.hausberger.mysuperapp.databinding.ActivitySaveDataBinding
+import com.hausberger.mysuperapp.framework.savedata.model.ExternalFileRepository
 import com.hausberger.mysuperapp.framework.savedata.model.InternalFileRepository
 import com.hausberger.mysuperapp.framework.savedata.model.Note
 import com.hausberger.mysuperapp.framework.savedata.model.NoteRepository
@@ -12,7 +13,7 @@ class SaveDataActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySaveDataBinding
 
-    private val repo: NoteRepository by lazy { InternalFileRepository(this) }
+    private val repo: NoteRepository by lazy { ExternalFileRepository(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
