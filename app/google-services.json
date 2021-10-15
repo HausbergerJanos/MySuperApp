@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "323815385701",
+    "firebase_url": "https://mysuperapp-49a9b-default-rtdb.firebaseio.com",
+    "project_id": "mysuperapp-49a9b",
+    "storage_bucket": "mysuperapp-49a9b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323815385701:android:de15b2c6e65028d8eb348c",
+        "android_client_info": {
+          "package_name": "com.hausberger.mysuperapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323815385701-05gdten0h7riussnuqv1upo25qg817s6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXmKthgiTl8fmxmqACGy5cat8i5aH7LX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323815385701-05gdten0h7riussnuqv1upo25qg817s6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

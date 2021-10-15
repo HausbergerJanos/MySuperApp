@@ -5,6 +5,14 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.hausberger.mysuperapp.databinding.ActivityAddNewPlacesBinding
 import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
@@ -56,12 +64,32 @@ class AddNewPlacesActivity : AppCompatActivity() {
                     )
                 )
 
+                val constraints = Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+
+                val uploadPlaceWorkRequest = OneTimeWorkRequestBuilder<UploadPlaceWorker>()
+                    .setConstraints(constraints)
+                    .build()
+
+                WorkManager
+                    .getInstance(this@AddNewPlacesActivity)
+                    .enqueue(uploadPlaceWorkRequest)
+
                 withContext(Main) {
                     if (result > 0) {
                         clearScreen()
-                        Toast.makeText(this@AddNewPlacesActivity, "Place has been saved!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@AddNewPlacesActivity,
+                            "Place has been saved!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(this@AddNewPlacesActivity, "Something went wrong...", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@AddNewPlacesActivity,
+                            "Something went wrong...",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
