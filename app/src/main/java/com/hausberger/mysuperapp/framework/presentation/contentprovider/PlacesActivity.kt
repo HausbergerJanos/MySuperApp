@@ -2,22 +2,20 @@ package com.hausberger.mysuperapp.framework.presentation.contentprovider
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hausberger.mysuperapp.databinding.ActivityPlacesBinding
-import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import javax.inject.Inject
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class PlacesActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var placesDao: PlacesDao
+    private val viewModel: PlacesViewModel by viewModels()
 
     private lateinit var binding: ActivityPlacesBinding
     private lateinit var placeAdapter: PlaceAdapter
@@ -35,34 +33,12 @@ class PlacesActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        populatePlaces()
-    }
-
-    private fun populatePlaces() {
-        GlobalScope.launch(IO) {
-            var places = placesDao.getPlaces()
-
-            if (places.isNullOrEmpty()) {
-                val initialPlaces = arrayOf(
-                    PlaceEntity(country = "USA", town = "New York"),
-                    PlaceEntity(country = "USA", town = "Boston"),
-                    PlaceEntity(country = "Hungary", town = "Budapest"),
-                    PlaceEntity(country = "Hungary", town = "Debrecen")
-                )
-
-                initialPlaces.forEach {
-                    placesDao.insert(it)
+        lifecycleScope.launchWhenStarted {
+            viewModel.places.collect { places ->
+                places?.let { safePlaces ->
+                    displayPlaces(safePlaces)
                 }
-
-                places = initialPlaces.toList()
-            }
-
-            withContext(Main) {
-                displayPlaces(places)
             }
         }
     }

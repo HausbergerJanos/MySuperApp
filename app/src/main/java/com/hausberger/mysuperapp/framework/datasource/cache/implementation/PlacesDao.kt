@@ -4,6 +4,7 @@ import android.database.Cursor
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -16,7 +17,7 @@ interface PlacesDao {
     fun insertPlace(place: PlaceEntity): Long
 
     @Query("SELECT * FROM places")
-    suspend fun getPlaces(): List<PlaceEntity>
+    fun getPlaces(): Flow<List<PlaceEntity>>
 
     /**
      * Select all places.

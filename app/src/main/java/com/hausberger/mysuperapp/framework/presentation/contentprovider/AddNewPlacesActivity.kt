@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
@@ -28,8 +30,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AddNewPlacesActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var placesDao: PlacesDao
+    private val viewModel: CreateNewPlaceViewModel by viewModels()
 
     lateinit var binding: ActivityAddNewPlacesBinding
 
@@ -56,28 +57,16 @@ class AddNewPlacesActivity : AppCompatActivity() {
         val country = binding.countryEditText.text.toString().trim()
 
         if (town.isNotEmpty() && country.isNotEmpty()) {
-            GlobalScope.launch(IO) {
-                val result = placesDao.insert(
-                    PlaceEntity(
-                        town = town,
-                        country = country
-                    )
+            lifecycleScope.launchWhenStarted {
+                val entity = PlaceEntity(
+                    town = town,
+                    country = country
                 )
 
-                val constraints = Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
-
-                val uploadPlaceWorkRequest = OneTimeWorkRequestBuilder<UploadPlaceWorker>()
-                    .setConstraints(constraints)
-                    .build()
-
-                WorkManager
-                    .getInstance(this@AddNewPlacesActivity)
-                    .enqueue(uploadPlaceWorkRequest)
+                val success = viewModel.createPlace(entity)
 
                 withContext(Main) {
-                    if (result > 0) {
+                    if (success) {
                         clearScreen()
                         Toast.makeText(
                             this@AddNewPlacesActivity,
@@ -93,6 +82,43 @@ class AddNewPlacesActivity : AppCompatActivity() {
                     }
                 }
             }
+//            GlobalScope.launch(IO) {
+//                val result = placesDao.insert(
+//                    PlaceEntity(
+//                        town = town,
+//                        country = country
+//                    )
+//                )
+//
+//                val constraints = Constraints.Builder()
+//                    .setRequiredNetworkType(NetworkType.CONNECTED)
+//                    .build()
+//
+//                val uploadPlaceWorkRequest = OneTimeWorkRequestBuilder<UploadPlaceWorker>()
+//                    .setConstraints(constraints)
+//                    .build()
+//
+//                WorkManager
+//                    .getInstance(this@AddNewPlacesActivity)
+//                    .enqueue(uploadPlaceWorkRequest)
+//
+//                withContext(Main) {
+//                    if (result > 0) {
+//                        clearScreen()
+//                        Toast.makeText(
+//                            this@AddNewPlacesActivity,
+//                            "Place has been saved!",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    } else {
+//                        Toast.makeText(
+//                            this@AddNewPlacesActivity,
+//                            "Something went wrong...",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//            }
         }
     }
 
