@@ -1,4 +1,4 @@
-package com.hausberger.mysuperapp.framework.datasource.cache.implementation
+package com.hausberger.mysuperapp.framework.datasource.cache.database
 
 import android.database.Cursor
 import androidx.room.*
@@ -64,4 +64,13 @@ interface PlacesDao {
      */
     @Update
     fun update(place: PlaceEntity?): Int
+
+    @Query("""
+        UPDATE places
+        SET 
+        external_id = :externalId,
+        synced = :synced
+        WHERE _id = :id
+    """)
+    fun updatePlace(id: Int, externalId: String, synced: Boolean): Int
 }

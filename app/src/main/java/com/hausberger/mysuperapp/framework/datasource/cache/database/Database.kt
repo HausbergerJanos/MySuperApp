@@ -2,7 +2,6 @@ package com.hausberger.mysuperapp.framework.datasource.cache.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 
 @Database(

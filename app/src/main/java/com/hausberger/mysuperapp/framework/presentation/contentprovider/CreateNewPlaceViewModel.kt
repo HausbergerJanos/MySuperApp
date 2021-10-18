@@ -1,6 +1,9 @@
 package com.hausberger.mysuperapp.framework.presentation.contentprovider
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.hausberger.mysuperapp.business.domain.model.Place
+import com.hausberger.mysuperapp.business.interactors.CreatePlaceInteractor
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -12,7 +15,10 @@ constructor(
     private val createPlaceInteractor: CreatePlaceInteractor
 ) : ViewModel() {
 
-    suspend fun createPlace(placeEntity: PlaceEntity): Boolean {
-        return createPlaceInteractor.cratePlace(placeEntity)
+    suspend fun createPlace(place: Place): Boolean {
+        return createPlaceInteractor.cratePlace(
+            place = place,
+            scope = viewModelScope
+        )
     }
 }

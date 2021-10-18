@@ -1,7 +1,9 @@
 package com.hausberger.mysuperapp.di
 
-import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
-import com.hausberger.mysuperapp.framework.presentation.contentprovider.CreatePlaceInteractor
+import com.hausberger.mysuperapp.business.data.cache.abstraction.PlaceCacheDataSource
+import com.hausberger.mysuperapp.business.data.network.abstraction.PlaceNetworkDataSource
+import com.hausberger.mysuperapp.framework.datasource.cache.database.PlacesDao
+import com.hausberger.mysuperapp.business.interactors.CreatePlaceInteractor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,8 +14,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    @Singleton
-    @Provides
-    fun provideCreatePlaceInteractor(placesDao: PlacesDao) =
-        CreatePlaceInteractor(placesDao)
+//    @Singleton
+//    @Provides
+//    fun provideCreatePlaceInteractor(
+//        placeCacheDataSource: PlaceCacheDataSource,
+//        placeNetworkDataSource: PlaceNetworkDataSource
+//    ) = CreatePlaceInteractor(
+//        placeCacheDataSource,
+//        placeNetworkDataSource
+//    )
 }

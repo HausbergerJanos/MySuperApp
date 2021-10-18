@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.databinding.ActivityPlacesBinding
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,7 +53,7 @@ class PlacesActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayPlaces(places: List<PlaceEntity>) {
+    private fun displayPlaces(places: List<Place>) {
         placeAdapter.submitList(places)
     }
 }

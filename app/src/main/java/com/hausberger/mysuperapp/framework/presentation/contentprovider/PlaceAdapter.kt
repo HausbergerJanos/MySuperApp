@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.databinding.ViewItemPlaceBinding
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 
-class PlaceAdapter : ListAdapter<PlaceEntity, PlaceAdapter.PlaceItemViewHolder>(PlaceComparator()) {
+class PlaceAdapter : ListAdapter<Place, PlaceAdapter.PlaceItemViewHolder>(PlaceComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceItemViewHolder {
         val binding = ViewItemPlaceBinding
@@ -27,7 +28,7 @@ class PlaceAdapter : ListAdapter<PlaceEntity, PlaceAdapter.PlaceItemViewHolder>(
         private val binding: ViewItemPlaceBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(place: PlaceEntity) {
+        fun bind(place: Place) {
             binding.apply {
                 town.text = place.town
                 country.text = place.country

@@ -7,7 +7,7 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
+import com.hausberger.mysuperapp.framework.datasource.cache.database.PlacesDao
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn

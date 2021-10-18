@@ -7,24 +7,12 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.databinding.ActivityAddNewPlacesBinding
-import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlacesDao
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -58,12 +46,13 @@ class AddNewPlacesActivity : AppCompatActivity() {
 
         if (town.isNotEmpty() && country.isNotEmpty()) {
             lifecycleScope.launchWhenStarted {
-                val entity = PlaceEntity(
+                val place = Place(
                     town = town,
-                    country = country
+                    country = country,
+                    synced = false
                 )
 
-                val success = viewModel.createPlace(entity)
+                val success = viewModel.createPlace(place)
 
                 withContext(Main) {
                     if (success) {

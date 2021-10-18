@@ -1,15 +1,16 @@
 package com.hausberger.mysuperapp.framework.presentation.contentprovider
 
 import androidx.recyclerview.widget.DiffUtil
+import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 
-class PlaceComparator : DiffUtil.ItemCallback<PlaceEntity>() {
+class PlaceComparator : DiffUtil.ItemCallback<Place>() {
 
-    override fun areItemsTheSame(oldItem: PlaceEntity, newItem: PlaceEntity): Boolean {
-        return oldItem.town == newItem.town
+    override fun areItemsTheSame(oldItem: Place, newItem: Place): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: PlaceEntity, newItem: PlaceEntity): Boolean {
+    override fun areContentsTheSame(oldItem: Place, newItem: Place): Boolean {
         return oldItem == newItem
     }
 }

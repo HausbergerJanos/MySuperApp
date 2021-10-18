@@ -20,8 +20,8 @@ data class PlaceEntity(
     @ColumnInfo(name = PlaceContract.COLUMN_COUNTRY)
     val country: String,
 
-    @ColumnInfo(name = "pending_transaction")
-    var pendingTransaction: Int = 0,
+    @ColumnInfo(name = "external_id")
+    val externalId: String = "",
 
     @ColumnInfo(name = "synced")
     var synced: Boolean = false
