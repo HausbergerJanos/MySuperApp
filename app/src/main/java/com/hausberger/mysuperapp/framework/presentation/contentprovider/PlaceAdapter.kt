@@ -9,7 +9,10 @@ import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.databinding.ViewItemPlaceBinding
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 
-class PlaceAdapter : ListAdapter<Place, PlaceAdapter.PlaceItemViewHolder>(PlaceComparator()) {
+class PlaceAdapter
+constructor(
+    private val interactor: Interactor
+) : ListAdapter<Place, PlaceAdapter.PlaceItemViewHolder>(PlaceComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceItemViewHolder {
         val binding = ViewItemPlaceBinding
@@ -34,7 +37,15 @@ class PlaceAdapter : ListAdapter<Place, PlaceAdapter.PlaceItemViewHolder>(PlaceC
                 country.text = place.country
                 town.alpha = if (place.synced) 1f else 0.5f
                 country.alpha = if (place.synced) 1f else 0.5f
+
+                root.setOnClickListener {
+                    interactor.onPlaceClick(place)
+                }
             }
         }
+    }
+
+    interface Interactor {
+        fun onPlaceClick(place: Place)
     }
 }

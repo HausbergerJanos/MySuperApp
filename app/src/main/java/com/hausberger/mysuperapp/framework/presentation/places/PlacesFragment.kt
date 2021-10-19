@@ -1,11 +1,13 @@
 package com.hausberger.mysuperapp.framework.presentation.places
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hausberger.mysuperapp.R
 import com.hausberger.mysuperapp.business.domain.model.Place
@@ -15,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class PlacesFragment : Fragment(R.layout.fragment_places) {
+class PlacesFragment : Fragment(R.layout.fragment_places), PlaceAdapter.Interactor {
     private var currentBinding: FragmentPlacesBinding? = null
     private val binding get() = currentBinding!!
 
@@ -32,7 +34,8 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
 
         binding.addNewPlace.apply {
             setOnClickListener {
-                findNavController().navigate(R.id.action_placesFragment_to_placeDetailFragment)
+                val action = PlacesFragmentDirections.actionPlacesFragmentToPlaceDetailFragment(null)
+                findNavController().navigate(action)
             }
         }
 
@@ -45,8 +48,13 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         }
     }
 
+    override fun onPlaceClick(place: Place) {
+        val action = PlacesFragmentDirections.actionPlacesFragmentToPlaceDetailFragment(place)
+        findNavController().navigate(action)
+    }
+
     private fun setupRecyclerView() {
-        placeAdapter = PlaceAdapter()
+        placeAdapter = PlaceAdapter(this)
 
         binding.placeRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

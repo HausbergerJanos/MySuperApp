@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id 'androidx.navigation.safeargs'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -83,6 +85,8 @@ dependencies {
 
     // Fragment
     implementation 'androidx.fragment:fragment-ktx:1.3.6'
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
 }
 
 // Need for Hilt

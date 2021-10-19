@@ -1,6 +1,9 @@
 package com.hausberger.mysuperapp.framework.presentation.places
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -11,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.hausberger.mysuperapp.R
 import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.databinding.FragmentPlaceDetailBinding
@@ -21,6 +25,8 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
     private var currentBinding: FragmentPlaceDetailBinding? = null
     private val binding get() = currentBinding!!
 
+    val args: PlaceDetailFragmentArgs by navArgs()
+
     private val viewModel: CreateNewPlaceViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,13 +34,48 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
 
         currentBinding = FragmentPlaceDetailBinding.bind(view)
 
-        binding.saveButton.apply {
-            setOnClickListener(provideSaveClickListener())
+        bind(args.place)
+    }
+
+    private fun bind(place: Place?) {
+        place?.let { safePlace ->
+            binding.apply {
+                saveButton.text = "Update"
+                townEditText.setText(safePlace.town)
+                countryEditText.setText(safePlace.country)
+                saveButton.setOnClickListener {
+                    updatePlace()
+                }
+            }
+
+            setHasOptionsMenu(true)
+        } ?: run {
+            binding.saveButton.apply {
+                savePlace()
+            }
         }
     }
 
-    private fun provideSaveClickListener() = View.OnClickListener {
-        savePlace()
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_delete_place -> {
+                deletePlace()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun updatePlace() {
+        Toast.makeText(requireContext(), "Update", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun deletePlace() {
+        Toast.makeText(requireContext(), "Delete", Toast.LENGTH_SHORT).show()
     }
 
     private fun savePlace() {
