@@ -4,9 +4,5 @@ import com.hausberger.mysuperapp.business.domain.model.Place
 
 interface PlaceNetworkService {
 
-    fun createPlace(
-        place: Place,
-        successCallback: (externalId: String) -> Unit,
-        errorCallback: () -> Unit
-    )
+    suspend fun createPlace(place: Place): String
 }

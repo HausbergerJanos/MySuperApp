@@ -11,11 +11,7 @@ constructor(
     private val placeNetworkService: PlaceNetworkService
 ) : PlaceNetworkDataSource {
 
-    override fun createPlace(
-        place: Place,
-        successCallback: (externalId: String) -> Unit,
-        errorCallback: () -> Unit
-    ) {
-        placeNetworkService.createPlace(place, successCallback, errorCallback)
+    override suspend fun createPlace(place: Place): String {
+        return placeNetworkService.createPlace(place)
     }
 }

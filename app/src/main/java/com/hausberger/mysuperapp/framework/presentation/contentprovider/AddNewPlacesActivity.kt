@@ -1,5 +1,7 @@
 package com.hausberger.mysuperapp.framework.presentation.contentprovider
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -52,7 +54,7 @@ class AddNewPlacesActivity : AppCompatActivity() {
                     synced = false
                 )
 
-                val success = viewModel.createPlace(place)
+                val success = viewModel.createPlace(place, getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
 
                 withContext(Main) {
                     if (success) {

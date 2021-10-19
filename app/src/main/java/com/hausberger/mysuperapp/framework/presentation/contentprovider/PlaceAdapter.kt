@@ -32,6 +32,8 @@ class PlaceAdapter : ListAdapter<Place, PlaceAdapter.PlaceItemViewHolder>(PlaceC
             binding.apply {
                 town.text = place.town
                 country.text = place.country
+                town.alpha = if (place.synced) 1f else 0.5f
+                country.alpha = if (place.synced) 1f else 0.5f
             }
         }
     }

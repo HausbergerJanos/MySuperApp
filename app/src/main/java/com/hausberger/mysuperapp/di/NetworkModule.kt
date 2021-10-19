@@ -3,6 +3,7 @@ package com.hausberger.mysuperapp.di
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.hausberger.mysuperapp.business.data.network.abstraction.PlaceNetworkDataSource
 import com.hausberger.mysuperapp.business.data.network.implementation.PlaceNetworkDataSourceImpl
@@ -32,8 +33,16 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun providesPlaceNetworkService(databaseReference: DatabaseReference): PlaceNetworkService {
-        return PlaceNetworkServiceImpl(databaseReference)
+    fun provideFireStore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
+
+    @Singleton
+    @Provides
+    fun providesPlaceNetworkService(
+        firebaseFirestore: FirebaseFirestore
+    ): PlaceNetworkService {
+        return PlaceNetworkServiceImpl(firebaseFirestore)
     }
 
     @Singleton

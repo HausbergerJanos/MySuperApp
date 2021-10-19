@@ -31,11 +31,38 @@
 package com.hausberger.mysuperapp.framework.util
 
 import android.app.Activity
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.widget.Toast
 
 /**
- * Utility class that allows to show a Toast
+ * Utility method that allows to show a Toast
  */
 fun Activity.showToast(msg: String) = Toast
     .makeText(this, msg, Toast.LENGTH_LONG)
     .show()
+
+/**
+ * Check internet connection
+ */
+fun ConnectivityManager.checkForInternet(): Boolean {
+    // Returns a Network object corresponding to
+    // the currently active default data network.
+    val network = activeNetwork ?: return false
+
+    // Representation of the capabilities of an active network.
+    val activeNetwork = getNetworkCapabilities(network) ?: return false
+
+    return when {
+        // Indicates this network uses a Wi-Fi transport,
+        // or WiFi has network connectivity
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+
+        // Indicates this network uses a Cellular transport. or
+        // Cellular has network connectivity
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+
+        // else return false
+        else -> false
+    }
+}
