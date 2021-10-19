@@ -1,38 +1,33 @@
-package com.hausberger.mysuperapp.framework.presentation.contentprovider
+package com.hausberger.mysuperapp.framework.presentation.places
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.hausberger.mysuperapp.R
 import com.hausberger.mysuperapp.business.domain.model.Place
-import com.hausberger.mysuperapp.databinding.ActivityAddNewPlacesBinding
-import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers.Main
+import com.hausberger.mysuperapp.databinding.FragmentPlaceDetailBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
-@AndroidEntryPoint
-class AddNewPlacesActivity : AppCompatActivity() {
+class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
+    private var currentBinding: FragmentPlaceDetailBinding? = null
+    private val binding get() = currentBinding!!
 
     private val viewModel: CreateNewPlaceViewModel by viewModels()
 
-    lateinit var binding: ActivityAddNewPlacesBinding
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAddNewPlacesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        currentBinding = FragmentPlaceDetailBinding.bind(view)
 
-        init()
-    }
-
-    private fun init() {
         binding.saveButton.apply {
             setOnClickListener(provideSaveClickListener())
         }
@@ -47,7 +42,7 @@ class AddNewPlacesActivity : AppCompatActivity() {
         val country = binding.countryEditText.text.toString().trim()
 
         if (town.isNotEmpty() && country.isNotEmpty()) {
-            lifecycleScope.launchWhenStarted {
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 val place = Place(
                     town = town,
                     country = country,
@@ -58,17 +53,17 @@ class AddNewPlacesActivity : AppCompatActivity() {
                     place
                 )
 
-                withContext(Main) {
+                withContext(Dispatchers.Main) {
                     if (success) {
                         clearScreen()
                         Toast.makeText(
-                            this@AddNewPlacesActivity,
+                            requireContext(),
                             "Place has been saved!",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         Toast.makeText(
-                            this@AddNewPlacesActivity,
+                            requireContext(),
                             "Something went wrong...",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -82,17 +77,22 @@ class AddNewPlacesActivity : AppCompatActivity() {
         binding.countryEditText.text.clear()
 
         val imm: InputMethodManager =
-            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            requireActivity().getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
         //Find the currently focused view, so we can grab the correct window token from it.
         //Find the currently focused view, so we can grab the correct window token from it.
-        var view: View? = currentFocus
+        var view: View? = requireActivity().currentFocus
         //If no view currently has focus, create a new one, just so we can grab a window token from it
         //If no view currently has focus, create a new one, just so we can grab a window token from it
         if (view == null) {
-            view = View(this@AddNewPlacesActivity)
+            view = View(requireContext())
         }
         imm.hideSoftInputFromWindow(view.windowToken, 0)
 
-        finish()
+        findNavController().popBackStack()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        currentBinding = null
     }
 }

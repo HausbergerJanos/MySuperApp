@@ -12,7 +12,7 @@ import androidx.loader.content.Loader
 import com.hausberger.mysuperapp.databinding.ActivityMainBinding
 import com.hausberger.mysuperapp.framework.datasource.provider.contentprovider.MyQueryHandler
 import com.hausberger.mysuperapp.framework.datasource.provider.contentprovider.PlaceContract
-import com.hausberger.mysuperapp.framework.presentation.contentprovider.PlacesActivity
+import com.hausberger.mysuperapp.framework.presentation.places.PlacesActivity
 import com.hausberger.mysuperapp.framework.savedata.ui.SaveDataActivity
 
 

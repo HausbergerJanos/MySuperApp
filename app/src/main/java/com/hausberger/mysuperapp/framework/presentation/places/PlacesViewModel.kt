@@ -1,4 +1,4 @@
-package com.hausberger.mysuperapp.framework.presentation.contentprovider
+package com.hausberger.mysuperapp.framework.presentation.places
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

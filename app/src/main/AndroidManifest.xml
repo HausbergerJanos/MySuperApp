@@ -15,6 +15,11 @@
         android:theme="@style/Theme.MySuperApp">
 
         <activity android:name=".framework.MainActivity">
+
+        </activity>
+
+        <activity android:name=".framework.presentation.places.PlacesActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,13 +27,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".framework.presentation.contentprovider.PlacesActivity" />
-
         <activity android:name=".framework.savedata.ui.SaveDataActivity" />
-
-        <activity
-            android:name=".framework.presentation.contentprovider.AddNewPlacesActivity"
-            android:windowSoftInputMode="adjustResize" />
 
         <provider
             android:name=".framework.datasource.provider.contentprovider.PlaceContentProvider"
