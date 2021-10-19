@@ -1,5 +1,6 @@
 package com.hausberger.mysuperapp.framework.presentation.contentprovider
 
+import android.content.Context
 import android.net.ConnectivityManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,12 +18,10 @@ constructor(
 ) : ViewModel() {
 
     suspend fun createPlace(
-        place: Place,
-        connectivityManager: ConnectivityManager
+        place: Place
     ): Boolean {
         return createPlaceInteractor.cratePlace(
-            place = place,
-            connectivityManager = connectivityManager
+            place = place
         )
     }
 }

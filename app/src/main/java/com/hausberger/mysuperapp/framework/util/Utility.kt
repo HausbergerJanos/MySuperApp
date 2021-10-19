@@ -31,6 +31,7 @@
 package com.hausberger.mysuperapp.framework.util
 
 import android.app.Activity
+import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.Toast
@@ -45,6 +46,11 @@ fun Activity.showToast(msg: String) = Toast
 /**
  * Check internet connection
  */
+fun Context.checkForInternet(): Boolean {
+    return (getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager)
+        ?.checkForInternet() ?: false
+}
+
 fun ConnectivityManager.checkForInternet(): Boolean {
     // Returns a Network object corresponding to
     // the currently active default data network.

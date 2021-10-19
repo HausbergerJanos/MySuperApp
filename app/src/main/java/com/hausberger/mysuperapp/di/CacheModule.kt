@@ -5,9 +5,12 @@ import androidx.room.Room
 import com.hausberger.mysuperapp.business.data.cache.abstraction.PlaceCacheDataSource
 import com.hausberger.mysuperapp.business.data.cache.implementation.PlaceCacheDataSourceImpl
 import com.hausberger.mysuperapp.framework.datasource.cache.abstraction.PlaceDaoService
+import com.hausberger.mysuperapp.framework.datasource.cache.abstraction.UnsyncedTransactionsDaoService
 import com.hausberger.mysuperapp.framework.datasource.cache.database.Database
 import com.hausberger.mysuperapp.framework.datasource.cache.database.PlacesDao
+import com.hausberger.mysuperapp.framework.datasource.cache.database.UnsyncedTransactionsDao
 import com.hausberger.mysuperapp.framework.datasource.cache.implementation.PlaceDaoServiceImpl
+import com.hausberger.mysuperapp.framework.datasource.cache.implementation.UnsyncedTransactionsDaoServiceImpl
 import com.hausberger.mysuperapp.framework.datasource.mapper.CacheMapper
 import dagger.Module
 import dagger.Provides
@@ -40,6 +43,12 @@ object CacheModule {
 
     @Singleton
     @Provides
+    fun provideUnsyncedTransactionsDao(database: Database): UnsyncedTransactionsDao {
+        return database.unsyncedTransactionsDao()
+    }
+
+    @Singleton
+    @Provides
     fun providePlaceDaoService(placesDao: PlacesDao): PlaceDaoService {
         return PlaceDaoServiceImpl(
             placesDao = placesDao,
@@ -51,5 +60,11 @@ object CacheModule {
     @Provides
     fun providePlaceCacheDataSource(placeDaoService: PlaceDaoService): PlaceCacheDataSource {
         return PlaceCacheDataSourceImpl(placeDaoService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUnsyncedTransactionsDaoService(unsyncedTransactionsDao: UnsyncedTransactionsDao): UnsyncedTransactionsDaoService {
+        return UnsyncedTransactionsDaoServiceImpl(unsyncedTransactionsDao)
     }
 }

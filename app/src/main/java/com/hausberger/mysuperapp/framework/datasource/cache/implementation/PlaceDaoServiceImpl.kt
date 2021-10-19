@@ -20,6 +20,12 @@ constructor(
         )
     }
 
+    override suspend fun getPlaceById(id: Int): Place {
+        return cacheMapper.mapFromEntity(
+            entity = placesDao.getPlaceById(id)
+        )
+    }
+
     override suspend fun getPlaces(): Flow<List<Place>> {
         return placesDao.getPlaces().flatMapLatest { placeEntities ->
             flow {

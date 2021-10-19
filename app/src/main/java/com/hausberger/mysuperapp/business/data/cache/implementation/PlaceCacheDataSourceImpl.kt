@@ -16,6 +16,10 @@ constructor(
         return placeDaoService.insertPlace(place)
     }
 
+    override suspend fun getPlaceById(id: Int): Place {
+        return placeDaoService.getPlaceById(id)
+    }
+
     override suspend fun getPlaces(): Flow<List<Place>> {
         return placeDaoService.getPlaces()
     }

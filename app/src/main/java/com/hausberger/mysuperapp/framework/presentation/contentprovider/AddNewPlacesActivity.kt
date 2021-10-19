@@ -54,7 +54,9 @@ class AddNewPlacesActivity : AppCompatActivity() {
                     synced = false
                 )
 
-                val success = viewModel.createPlace(place, getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                val success = viewModel.createPlace(
+                    place
+                )
 
                 withContext(Main) {
                     if (success) {
@@ -72,45 +74,7 @@ class AddNewPlacesActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-            }
-//            GlobalScope.launch(IO) {
-//                val result = placesDao.insert(
-//                    PlaceEntity(
-//                        town = town,
-//                        country = country
-//                    )
-//                )
-//
-//                val constraints = Constraints.Builder()
-//                    .setRequiredNetworkType(NetworkType.CONNECTED)
-//                    .build()
-//
-//                val uploadPlaceWorkRequest = OneTimeWorkRequestBuilder<UploadPlaceWorker>()
-//                    .setConstraints(constraints)
-//                    .build()
-//
-//                WorkManager
-//                    .getInstance(this@AddNewPlacesActivity)
-//                    .enqueue(uploadPlaceWorkRequest)
-//
-//                withContext(Main) {
-//                    if (result > 0) {
-//                        clearScreen()
-//                        Toast.makeText(
-//                            this@AddNewPlacesActivity,
-//                            "Place has been saved!",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    } else {
-//                        Toast.makeText(
-//                            this@AddNewPlacesActivity,
-//                            "Something went wrong...",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//            }
-        }
+            } }
     }
 
     private fun clearScreen() {
