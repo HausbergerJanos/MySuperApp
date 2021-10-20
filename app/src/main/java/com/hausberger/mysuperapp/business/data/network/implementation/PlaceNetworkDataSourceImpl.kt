@@ -14,4 +14,8 @@ constructor(
     override suspend fun createPlace(place: Place): String {
         return placeNetworkService.createPlace(place)
     }
+
+    override suspend fun deletePlace(place: Place) {
+        placeNetworkService.deletePlace(place)
+    }
 }

@@ -26,7 +26,7 @@ constructor(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        Log.d("PLACE_WORKER-->", "Place sync has been started")
+        Log.d("MY_WORKER-->", "Place sync has been started")
 
         // Get all "place" releated pending transactions
         val pendingTransactions = unsyncedTransactionsDaoService
@@ -34,16 +34,21 @@ constructor(
 
         // Group by transaction type
         // 0 - Create
+        // 2 - Delete
         val byTransactionType = pendingTransactions
                 .groupBy { it.transactionType }
 
         val pendingCreateTransactions = byTransactionType[0]
-        val executedTransactions = executePendingCreateTransactions(pendingCreateTransactions)
+        val processedCreateTransactions = executePendingCreateTransactions(pendingCreateTransactions)
+        val createSuccess = processedCreateTransactions.containsAll(pendingCreateTransactions ?: emptyList())
 
-        val success = executedTransactions.containsAll(pendingCreateTransactions ?: emptyList())
-        Log.d("MY_WORKER-->", "Upload Place Finished. Success: $success")
+        val pendingDeleteTransactions = byTransactionType[2]
+        val processedDeleteTransactions = executePendingDeleteTransactions(pendingDeleteTransactions)
+        val deleteSuccess = processedDeleteTransactions.containsAll(pendingDeleteTransactions ?: emptyList())
 
-        return if (success) {
+        Log.d("MY_WORKER-->", "Upload Place Finished. Success: $createSuccess + $deleteSuccess")
+
+        return if (createSuccess && deleteSuccess) {
             Result.success()
         } else {
             Result.retry()
@@ -53,7 +58,7 @@ constructor(
     private suspend fun executePendingCreateTransactions(
         transactions: List<UnsyncedTransactionEntity>?
     ) : List<UnsyncedTransactionEntity> {
-        val clearedEntities = mutableListOf<UnsyncedTransactionEntity>()
+        val processedEntities = mutableListOf<UnsyncedTransactionEntity>()
 
         transactions?.let {
             for (transaction in transactions) {
@@ -71,13 +76,44 @@ constructor(
                     unsyncedTransactionsDaoService.deleteTransaction(transaction.id)
 
                     // Add to cleared list
-                    clearedEntities.add(transaction)
+                    processedEntities.add(transaction)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
 
-        return clearedEntities
+        return processedEntities
+    }
+
+    private suspend fun executePendingDeleteTransactions(
+        transactions: List<UnsyncedTransactionEntity>?
+    ) : List<UnsyncedTransactionEntity> {
+        val processedEntities = mutableListOf<UnsyncedTransactionEntity>()
+
+        transactions?.let {
+            for (transaction in transactions) {
+                try {
+                    // Get place from local DB
+                    val place = placesCacheDataSource.getPlaceById(transaction.entityId)
+
+                    // Create place in remote DB
+                    val externalId = placeNetworkDataSource.deletePlace(place)
+
+                    // Update place in locale DB
+                    placesCacheDataSource.deletePlace(place.id.toInt())
+
+                    // Remove pending transaction
+                    unsyncedTransactionsDaoService.deleteTransaction(transaction.id)
+
+                    // Add to cleared list
+                    processedEntities.add(transaction)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        return processedEntities
     }
 }

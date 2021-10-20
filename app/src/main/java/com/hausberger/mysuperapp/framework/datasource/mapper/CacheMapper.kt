@@ -4,7 +4,6 @@ import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.business.domain.util.EntityMapper
 import com.hausberger.mysuperapp.framework.datasource.cache.model.PlaceEntity
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class CacheMapper
 @Inject
@@ -15,7 +14,8 @@ constructor() : EntityMapper<PlaceEntity, Place> {
             id = entity.id.toString(),
             town = entity.town,
             country = entity.country,
-            synced = entity.synced
+            synced = entity.synced,
+            externalId = entity.externalId
         )
     }
 
@@ -23,7 +23,8 @@ constructor() : EntityMapper<PlaceEntity, Place> {
         return PlaceEntity(
             town = domainModel.town,
             country = domainModel.country,
-            synced = domainModel.synced
+            synced = domainModel.synced,
+            externalId = domainModel.externalId
         )
     }
 }

@@ -27,9 +27,7 @@ constructor(
     @ApplicationContext appContext: Context
 ) : SyncInteractor(appContext) {
 
-    suspend fun cratePlace(
-        place: Place
-    ): Boolean {
+    suspend fun cratePlace(place: Place) {
         // Create place and save it in to the local DB
         val innerId = placeCacheDataSource.insertPlace(place)
         place.id = innerId.toString()
@@ -64,8 +62,5 @@ constructor(
             // There is no Internet connection. Enqueue sync worker
             enqueueSyncWorker()
         }
-
-        // If place innerId > 0 means place has been added successfully into locale DB
-        return innerId > 0
     }
 }

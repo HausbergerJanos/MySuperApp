@@ -7,9 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +18,7 @@ import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.databinding.FragmentPlaceDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
@@ -37,6 +36,21 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
         currentBinding = FragmentPlaceDetailBinding.bind(view)
 
         bind(args.place)
+
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.saved.collect { saved ->
+                saved?.let { safeSaved ->
+                    if (safeSaved) {
+                        clearScreen()
+                        findNavController().navigateUp()
+                    }
+                }
+            }
+        }
     }
 
     private fun bind(place: Place?) {
@@ -79,7 +93,9 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
     }
 
     private fun deletePlace() {
-        Toast.makeText(requireContext(), "Delete", Toast.LENGTH_SHORT).show()
+        viewModel.deletePlace(
+            place = args.place!!
+        )
     }
 
     private fun savePlace() {
@@ -87,34 +103,13 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
         val country = binding.countryEditText.text.toString().trim()
 
         if (town.isNotEmpty() && country.isNotEmpty()) {
-            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-                val place = Place(
-                    town = town,
-                    country = country,
-                    synced = false
-                )
+            val place = Place(
+                town = town,
+                country = country,
+                synced = false
+            )
 
-                val success = viewModel.createPlace(
-                    place
-                )
-
-                withContext(Dispatchers.Main) {
-                    if (success) {
-                        clearScreen()
-                        Toast.makeText(
-                            requireContext(),
-                            "Place has been saved!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Something went wrong...",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
+            viewModel.createPlace(place)
         }
     }
 

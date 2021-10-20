@@ -3,7 +3,6 @@ package com.hausberger.mysuperapp.framework.datasource.cache.implementation
 import com.hausberger.mysuperapp.framework.datasource.cache.abstraction.UnsyncedTransactionsDaoService
 import com.hausberger.mysuperapp.framework.datasource.cache.database.UnsyncedTransactionsDao
 import com.hausberger.mysuperapp.framework.datasource.cache.model.UnsyncedTransactionEntity
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UnsyncedTransactionsDaoServiceImpl
@@ -14,6 +13,10 @@ constructor(
 
     override suspend fun insert(transaction: UnsyncedTransactionEntity): Long {
         return unsyncedTransactionsDao.insert(transaction)
+    }
+
+    override suspend fun getPendingTransactionByEntityId(id: Int): UnsyncedTransactionEntity? {
+        return unsyncedTransactionsDao.getPendingTransactionByEntityId(id)
     }
 
     override suspend fun getPendingTransactions(table: String): List<UnsyncedTransactionEntity> {

@@ -73,6 +73,14 @@ interface PlacesDao {
 
     @Query("""
         UPDATE places
+        SET
+        synced = :synced
+        WHERE _id = :id
+    """)
+    fun updatePlace(id: Int, synced: Boolean): Int
+
+    @Query("""
+        UPDATE places
         SET 
         external_id = :externalId,
         synced = :synced

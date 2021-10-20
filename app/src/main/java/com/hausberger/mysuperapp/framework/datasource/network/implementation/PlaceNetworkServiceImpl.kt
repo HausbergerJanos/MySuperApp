@@ -27,6 +27,20 @@ constructor(
         }
     }
 
+    override suspend fun deletePlace(place: Place) {
+        return suspendCoroutine { cont ->
+            deletePlaceOnFirestore(
+                place = place,
+                successCallback = {
+                    cont.resumeWith(Result.success(Unit))
+                },
+                errorCallback = { exception ->
+                    cont.resumeWith(Result.failure(exception))
+                }
+            )
+        }
+    }
+
     private fun createPlaceOnFirestore(
         place: Place,
         successCallback: (externalId: String) -> Unit,
@@ -40,6 +54,23 @@ constructor(
             .set(place)
             .addOnSuccessListener {
                 successCallback.invoke(externalId)
+            }
+            .addOnFailureListener { exception ->
+                errorCallback.invoke(exception)
+            }
+    }
+
+    private fun deletePlaceOnFirestore(
+        place: Place,
+        successCallback: () -> Unit,
+        errorCallback: (exception: Exception) -> Unit
+    ) {
+        firebaseFirestore
+            .collection("places")
+            .document(place.externalId)
+            .delete()
+            .addOnSuccessListener {
+                successCallback.invoke()
             }
             .addOnFailureListener { exception ->
                 errorCallback.invoke(exception)
