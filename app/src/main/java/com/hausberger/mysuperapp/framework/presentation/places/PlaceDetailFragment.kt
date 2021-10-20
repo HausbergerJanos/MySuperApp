@@ -18,9 +18,11 @@ import androidx.navigation.fragment.navArgs
 import com.hausberger.mysuperapp.R
 import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.databinding.FragmentPlaceDetailBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
     private var currentBinding: FragmentPlaceDetailBinding? = null
     private val binding get() = currentBinding!!
@@ -51,7 +53,9 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
             setHasOptionsMenu(true)
         } ?: run {
             binding.saveButton.apply {
-                savePlace()
+                setOnClickListener {
+                    savePlace()
+                }
             }
         }
     }
@@ -110,7 +114,8 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
                         ).show()
                     }
                 }
-            } }
+            }
+        }
     }
 
     private fun clearScreen() {
