@@ -17,9 +17,8 @@ import com.hausberger.mysuperapp.R
 import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.databinding.FragmentPlaceDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.withContext
+import java.util.*
 
 @AndroidEntryPoint
 class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
@@ -28,7 +27,7 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
 
     val args: PlaceDetailFragmentArgs by navArgs()
 
-    private val viewModel: CreateNewPlaceViewModel by viewModels()
+    private val viewModel: EditPlaceViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -104,6 +103,7 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
 
         if (town.isNotEmpty() && country.isNotEmpty()) {
             val place = Place(
+                id = UUID.randomUUID().toString(),
                 town = town,
                 country = country,
                 synced = false

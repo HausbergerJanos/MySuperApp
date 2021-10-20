@@ -10,7 +10,6 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import com.hausberger.mysuperapp.databinding.ActivityMainBinding
-import com.hausberger.mysuperapp.framework.datasource.provider.contentprovider.MyQueryHandler
 import com.hausberger.mysuperapp.framework.datasource.provider.contentprovider.PlaceContract
 import com.hausberger.mysuperapp.framework.presentation.places.PlacesActivity
 import com.hausberger.mysuperapp.framework.savedata.ui.SaveDataActivity
@@ -135,94 +134,4 @@ class MainActivity : AppCompatActivity() {
                 //mCheeseAdapter.setCheeses(null)
             }
         }
-
-    private fun insertToDb() {
-        // Defines an object to contain the new values to insert
-        val newValues = ContentValues()
-
-        /**
-         * Sets the values of each column and inserts the word. The arguments to the "put"
-         * method are "column name" and "value"
-         */
-        newValues.put(PlaceContract.COLUMN_TOWN, "Eger")
-        newValues.put(PlaceContract.COLUMN_COUNTRY, "Hungary")
-
-        MyQueryHandler(this).startInsert(-1, null, PlaceContract.URI_PLACE, newValues)
-    }
-
-    private fun deleteFromDb() {
-        // Defines a string to contain the selection clause
-        var selectionClause: String? = null
-
-        // Declares an array to contain selection arguments
-        lateinit var selectionArgs: Array<String>
-
-        // Gets a word from the UI
-        val searchString: String? = "Hungary"
-
-        // If the word is the empty string, gets everything
-        selectionArgs = searchString?.takeIf { it.isNotEmpty() }?.let {
-            selectionClause = "${PlaceContract.COLUMN_COUNTRY} = ?"
-            arrayOf(it)
-        } ?: run {
-            selectionClause = null
-            emptyArray()
-        }
-
-        MyQueryHandler(this).startDelete(
-            -1,
-            null,
-            PlaceContract.URI_PLACE,
-            selectionClause,
-            selectionArgs)
-    }
-
-    private fun updatePlace() {
-        /**
-         * Update by id. In this case use [URI_PLACE_TEST] uri. SelectionClause and selectionArgs
-         * will be ignored
-         */
-        // Defines an object to contain the new values to insert
-        val newValues = ContentValues()
-
-        /**
-         * Sets the values of each column and inserts the word. The arguments to the "put"
-         * method are "column name" and "value"
-         */
-        newValues.put(PlaceContract.COLUMN_TOWN, "Tunyog")
-        newValues.put(PlaceContract.COLUMN_COUNTRY, "Anglia")
-
-        /** ------------------------------------------------------------------------------------ */
-        /**
-         * Update by selection. In this case use [URI_PLACE] uri. [newValues] will be ignored.
-         * Important!!! If you update places on this way, updated rows counter will be always 0.
-         * We can not notify about how many rows updated.
-         */
-        // Defines a string to contain the selection clause
-        var selectionClause: String? = null
-
-        // Declares an array to contain selection arguments
-        lateinit var selectionArgs: Array<String>
-
-        // Gets a word from the UI
-        val searchString: String? = "Anglia"
-
-        // If the word is the empty string, gets everything
-        selectionArgs = searchString?.takeIf { it.isNotEmpty() }?.let {
-            selectionClause = " SET ${PlaceContract.COLUMN_TOWN} = ?, ${PlaceContract.COLUMN_COUNTRY} = ? WHERE ${PlaceContract.COLUMN_COUNTRY} = ?"
-            arrayOf("Roxfort", "Hungary", it)
-        } ?: run {
-            selectionClause = null
-            emptyArray()
-        }
-
-        MyQueryHandler(this).startUpdate(
-            -1,
-            null,
-            PlaceContract.URI_PLACE,
-            newValues,
-            selectionClause,
-            selectionArgs
-        )
-    }
 }

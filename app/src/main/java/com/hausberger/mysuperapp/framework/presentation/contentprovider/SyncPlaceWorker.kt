@@ -67,10 +67,10 @@ constructor(
                     val place = placesCacheDataSource.getPlaceById(transaction.entityId)
 
                     // Create place in remote DB
-                    val externalId = placeNetworkDataSource.createPlace(place)
+                    val externalId = placeNetworkDataSource.insertOrUpdatePlace(place)
 
                     // Update place in locale DB
-                    placesCacheDataSource.updatePlace(place.id.toInt(), externalId, true)
+                    placesCacheDataSource.updatePlace(place.id, true)
 
                     // Remove pending transaction
                     unsyncedTransactionsDaoService.deleteTransaction(transaction.id)
@@ -101,7 +101,7 @@ constructor(
                     val externalId = placeNetworkDataSource.deletePlace(place)
 
                     // Update place in locale DB
-                    placesCacheDataSource.deletePlace(place.id.toInt())
+                    placesCacheDataSource.deletePlace(place.id)
 
                     // Remove pending transaction
                     unsyncedTransactionsDaoService.deleteTransaction(transaction.id)

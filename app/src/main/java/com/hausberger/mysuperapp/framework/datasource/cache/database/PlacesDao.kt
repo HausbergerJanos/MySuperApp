@@ -23,7 +23,7 @@ interface PlacesDao {
         SELECT * FROM places 
         WHERE _id = :id
     """)
-    suspend fun getPlaceById(id: Int): PlaceEntity
+    suspend fun getPlaceById(id: String): PlaceEntity
 
     /**
      * Select all places.
@@ -52,7 +52,7 @@ interface PlacesDao {
      * @return A number of places deleted. This should always be `1`.
      */
     @Query("DELETE FROM places WHERE _id = :id")
-    fun deleteById(id: Int): Int
+    fun deleteById(id: String): Int
 
     /**
      * Counts the number of places in the table.
@@ -77,14 +77,5 @@ interface PlacesDao {
         synced = :synced
         WHERE _id = :id
     """)
-    fun updatePlace(id: Int, synced: Boolean): Int
-
-    @Query("""
-        UPDATE places
-        SET 
-        external_id = :externalId,
-        synced = :synced
-        WHERE _id = :id
-    """)
-    fun updatePlace(id: Int, externalId: String, synced: Boolean): Int
+    fun updatePlace(id: String, synced: Boolean): Int
 }

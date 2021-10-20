@@ -4,7 +4,7 @@ import com.hausberger.mysuperapp.business.domain.model.Place
 
 interface PlaceNetworkService {
 
-    suspend fun createPlace(place: Place): String
+    suspend fun insertOrUpdatePlace(place: Place)
 
     suspend fun deletePlace(place: Place)
 }

@@ -11,8 +11,8 @@ constructor(
     private val placeNetworkService: PlaceNetworkService
 ) : PlaceNetworkDataSource {
 
-    override suspend fun createPlace(place: Place): String {
-        return placeNetworkService.createPlace(place)
+    override suspend fun insertOrUpdatePlace(place: Place) {
+        return placeNetworkService.insertOrUpdatePlace(place)
     }
 
     override suspend fun deletePlace(place: Place) {

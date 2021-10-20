@@ -23,11 +23,11 @@ constructor(
 
     suspend fun deletePlace(place: Place) {
         var pendingTransaction = unsyncedTransactionsDaoService
-            .getPendingTransactionByEntityId(place.id.toInt())
+            .getPendingTransactionByEntityId(place.id)
 
         pendingTransaction?.let { transaction ->
             if (transaction.transactionType == 0) {
-                placeCacheDataSource.deletePlace(place.id.toInt())
+                placeCacheDataSource.deletePlace(place.id)
                 unsyncedTransactionsDaoService.deleteTransaction(transaction.id)
                 return
             }
@@ -35,20 +35,20 @@ constructor(
 
         if (pendingTransaction == null || pendingTransaction.transactionType != 2) {
             pendingTransaction = UnsyncedTransactionEntity(
-                entityId = place.id.toInt(),
+                entityId = place.id,
                 entityTableName = PlaceContract.TABLE_NAME,
                 transactionType = 2
             )
 
             unsyncedTransactionsDaoService.insert(pendingTransaction)
 
-            placeCacheDataSource.updatePlace(place.id.toInt(), false)
+            placeCacheDataSource.updatePlace(place.id, false)
         }
 
         if (checkForInternet()) {
             try {
                 placeNetworkDataSource.deletePlace(place)
-                placeCacheDataSource.deletePlace(place.id.toInt())
+                placeCacheDataSource.deletePlace(place.id)
                 unsyncedTransactionsDaoService.deleteTransaction(pendingTransaction.id)
             } catch (e: Exception) {
                 enqueueSyncWorker()

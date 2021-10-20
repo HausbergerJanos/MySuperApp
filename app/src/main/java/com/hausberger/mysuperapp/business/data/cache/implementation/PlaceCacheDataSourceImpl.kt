@@ -16,7 +16,7 @@ constructor(
         return placeDaoService.insertPlace(place)
     }
 
-    override suspend fun getPlaceById(id: Int): Place {
+    override suspend fun getPlaceById(id: String): Place {
         return placeDaoService.getPlaceById(id)
     }
 
@@ -24,15 +24,11 @@ constructor(
         return placeDaoService.getPlaces()
     }
 
-    override suspend fun updatePlace(id: Int, synced: Boolean): Int {
+    override suspend fun updatePlace(id: String, synced: Boolean): Int {
         return placeDaoService.updatePlace(id, synced)
     }
 
-    override suspend fun updatePlace(id: Int, externalId: String, synced: Boolean): Int {
-        return placeDaoService.updatePlace(id, externalId, synced)
-    }
-
-    override suspend fun deletePlace(id: Int): Int {
+    override suspend fun deletePlace(id: String): Int {
         return placeDaoService.deletePlace(id)
     }
 }

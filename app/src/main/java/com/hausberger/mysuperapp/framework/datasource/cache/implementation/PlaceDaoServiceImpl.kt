@@ -20,7 +20,7 @@ constructor(
         )
     }
 
-    override suspend fun getPlaceById(id: Int): Place {
+    override suspend fun getPlaceById(id: String): Place {
         return cacheMapper.mapFromEntity(
             entity = placesDao.getPlaceById(id)
         )
@@ -38,15 +38,11 @@ constructor(
         }
     }
 
-    override suspend fun updatePlace(id: Int, synced: Boolean): Int {
+    override suspend fun updatePlace(id: String, synced: Boolean): Int {
         return placesDao.updatePlace(id, synced)
     }
 
-    override suspend fun updatePlace(id: Int, externalId: String, synced: Boolean): Int {
-        return placesDao.updatePlace(id, externalId, synced)
-    }
-
-    override suspend fun deletePlace(id: Int): Int {
+    override suspend fun deletePlace(id: String): Int {
         return placesDao.deleteById(id)
     }
 }

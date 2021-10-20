@@ -13,7 +13,7 @@ data class UnsyncedTransactionEntity(
     var id: Int = 0,
 
     @ColumnInfo(name = "entity_id")
-    val entityId: Int,
+    val entityId: String,
 
     @ColumnInfo(name = "table_name")
     val entityTableName: String,

@@ -13,12 +13,12 @@ constructor(
     private val firebaseFirestore: FirebaseFirestore
 ) : PlaceNetworkService {
 
-    override suspend fun createPlace(place: Place): String {
+    override suspend fun insertOrUpdatePlace(place: Place) {
         return suspendCoroutine { cont ->
             createPlaceOnFirestore(
                 place = place,
-                successCallback = { externalId ->
-                    cont.resumeWith(Result.success(externalId))
+                successCallback = {
+                    cont.resumeWith(Result.success(Unit))
                 },
                 errorCallback = { exception ->
                     cont.resumeWith(Result.failure(exception))
@@ -43,17 +43,15 @@ constructor(
 
     private fun createPlaceOnFirestore(
         place: Place,
-        successCallback: (externalId: String) -> Unit,
+        successCallback: () -> Unit,
         errorCallback: (exception: Exception) -> Unit
     ) {
-        val externalId = UUID.randomUUID().toString()
-
         firebaseFirestore
             .collection("places")
-            .document(externalId)
+            .document(place.id)
             .set(place)
             .addOnSuccessListener {
-                successCallback.invoke(externalId)
+                successCallback.invoke()
             }
             .addOnFailureListener { exception ->
                 errorCallback.invoke(exception)
@@ -67,7 +65,7 @@ constructor(
     ) {
         firebaseFirestore
             .collection("places")
-            .document(place.externalId)
+            .document(place.id)
             .delete()
             .addOnSuccessListener {
                 successCallback.invoke()

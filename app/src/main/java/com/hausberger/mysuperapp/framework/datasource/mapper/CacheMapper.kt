@@ -11,20 +11,19 @@ constructor() : EntityMapper<PlaceEntity, Place> {
 
     override fun mapFromEntity(entity: PlaceEntity): Place {
         return Place(
-            id = entity.id.toString(),
+            id = entity.id,
             town = entity.town,
             country = entity.country,
-            synced = entity.synced,
-            externalId = entity.externalId
+            synced = entity.synced
         )
     }
 
     override fun mapToEntity(domainModel: Place): PlaceEntity {
         return PlaceEntity(
+            id = domainModel.id,
             town = domainModel.town,
             country = domainModel.country,
-            synced = domainModel.synced,
-            externalId = domainModel.externalId
+            synced = domainModel.synced
         )
     }
 }

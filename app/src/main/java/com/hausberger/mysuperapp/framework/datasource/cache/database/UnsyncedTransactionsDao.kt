@@ -17,7 +17,7 @@ interface UnsyncedTransactionsDao {
         SELECT * FROM pending_transactions
         WHERE entity_id = :id
     """)
-    suspend fun getPendingTransactionByEntityId(id: Int): UnsyncedTransactionEntity?
+    suspend fun getPendingTransactionByEntityId(id: String): UnsyncedTransactionEntity?
 
     @Query("""
         SELECT * FROM pending_transactions

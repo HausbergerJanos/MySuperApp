@@ -15,7 +15,7 @@ constructor(
         return unsyncedTransactionsDao.insert(transaction)
     }
 
-    override suspend fun getPendingTransactionByEntityId(id: Int): UnsyncedTransactionEntity? {
+    override suspend fun getPendingTransactionByEntityId(id: String): UnsyncedTransactionEntity? {
         return unsyncedTransactionsDao.getPendingTransactionByEntityId(id)
     }
 

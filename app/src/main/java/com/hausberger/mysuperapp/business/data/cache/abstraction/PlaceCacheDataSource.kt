@@ -7,13 +7,11 @@ interface PlaceCacheDataSource {
 
     suspend fun insertPlace(place: Place): Long
 
-    suspend fun getPlaceById(id: Int): Place
+    suspend fun getPlaceById(id: String): Place
 
     suspend fun getPlaces(): Flow<List<Place>>
 
-    suspend fun updatePlace(id: Int, synced: Boolean): Int
+    suspend fun updatePlace(id: String, synced: Boolean): Int
 
-    suspend fun updatePlace(id: Int, externalId: String, synced: Boolean): Int
-
-    suspend fun deletePlace(id: Int): Int
+    suspend fun deletePlace(id: String): Int
 }

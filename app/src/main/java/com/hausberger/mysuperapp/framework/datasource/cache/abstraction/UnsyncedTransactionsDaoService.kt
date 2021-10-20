@@ -7,7 +7,7 @@ interface UnsyncedTransactionsDaoService {
 
     suspend fun insert(transaction: UnsyncedTransactionEntity): Long
 
-    suspend fun getPendingTransactionByEntityId(id: Int): UnsyncedTransactionEntity?
+    suspend fun getPendingTransactionByEntityId(id: String): UnsyncedTransactionEntity?
 
     suspend fun getPendingTransactions(table: String): List<UnsyncedTransactionEntity>
 
