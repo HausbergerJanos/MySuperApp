@@ -34,28 +34,33 @@ constructor(
 
         // Group by transaction type
         // 0 - Create
+        // 1 - Update
         // 2 - Delete
         val byTransactionType = pendingTransactions
                 .groupBy { it.transactionType }
 
         val pendingCreateTransactions = byTransactionType[0]
-        val processedCreateTransactions = executePendingCreateTransactions(pendingCreateTransactions)
+        val processedCreateTransactions = executePendingCreateOrUpdateTransactions(pendingCreateTransactions)
         val createSuccess = processedCreateTransactions.containsAll(pendingCreateTransactions ?: emptyList())
+
+        val pendingUpdateTransactions = byTransactionType[1]
+        val processedUpdateTransactions = executePendingCreateOrUpdateTransactions(pendingUpdateTransactions)
+        val updateSuccess = processedUpdateTransactions.containsAll(pendingUpdateTransactions ?: emptyList())
 
         val pendingDeleteTransactions = byTransactionType[2]
         val processedDeleteTransactions = executePendingDeleteTransactions(pendingDeleteTransactions)
         val deleteSuccess = processedDeleteTransactions.containsAll(pendingDeleteTransactions ?: emptyList())
 
-        Log.d("MY_WORKER-->", "Upload Place Finished. Success: $createSuccess + $deleteSuccess")
+        Log.d("MY_WORKER-->", "Upload Place Finished. Success: $createSuccess + $updateSuccess + $deleteSuccess")
 
-        return if (createSuccess && deleteSuccess) {
+        return if (createSuccess && updateSuccess && deleteSuccess) {
             Result.success()
         } else {
             Result.retry()
         }
     }
 
-    private suspend fun executePendingCreateTransactions(
+    private suspend fun executePendingCreateOrUpdateTransactions(
         transactions: List<UnsyncedTransactionEntity>?
     ) : List<UnsyncedTransactionEntity> {
         val processedEntities = mutableListOf<UnsyncedTransactionEntity>()

@@ -88,7 +88,17 @@ class PlaceDetailFragment : Fragment(R.layout.fragment_place_detail) {
     }
 
     private fun updatePlace() {
-        Toast.makeText(requireContext(), "Update", Toast.LENGTH_SHORT).show()
+        val town = binding.townEditText.text.toString().trim()
+        val country = binding.countryEditText.text.toString().trim()
+
+        if (town.isNotEmpty() && country.isNotEmpty()) {
+            val place = args.place!!.copy(
+                town = town,
+                country = country
+            )
+
+            viewModel.updatePlace(place)
+        }
     }
 
     private fun deletePlace() {

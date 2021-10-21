@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hausberger.mysuperapp.business.domain.model.Place
 import com.hausberger.mysuperapp.business.interactors.CreatePlaceInteractor
 import com.hausberger.mysuperapp.business.interactors.DeletePlaceInteractor
+import com.hausberger.mysuperapp.business.interactors.UpdatePlaceInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ class EditPlaceViewModel
 @Inject
 constructor(
     private val createPlaceInteractor: CreatePlaceInteractor,
+    private val updatePlaceInteractor: UpdatePlaceInteractor,
     private val deletePlaceInteractor: DeletePlaceInteractor
 ) : ViewModel() {
 
@@ -26,6 +28,16 @@ constructor(
     fun createPlace(place: Place) {
         viewModelScope.launch(IO) {
             createPlaceInteractor.cratePlace(
+                place = place
+            )
+
+            _saved.value = true
+        }
+    }
+
+    fun updatePlace(place: Place) {
+        viewModelScope.launch(IO) {
+            updatePlaceInteractor.updatePlace(
                 place = place
             )
 
